@@ -33,7 +33,7 @@ function updateBoard(game) {
 
 	for (var i = 0; i < game.height; i++) {
 		for (var j = 0; j < game.width; j++) {
-		var cell = $("#cellid"+ i + "" + j);
+		var cell = $("#cellid"+ i + "-" + j);
 
 			if (includePos(snakeSpots, j, i)) {
 				cell.css('background-color', 'green');
@@ -70,7 +70,7 @@ function makeBoard(game) {
 		for (var j = 0; j < game.width; j++) {
 			var cellDiv = $("<div>");
 			cellDiv.addClass('cell');
-			cellDiv.attr('id', "cellid"+ i + "" + j);
+			cellDiv.attr('id', "cellid"+ i + "-" + j);
 			cellDiv.css({'width': '25px',
 										'height': '25px',
 										'background-color': 'black',
