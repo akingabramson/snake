@@ -8,10 +8,11 @@ $(function() {
 		SnakeGame.updateBoard(game);
 
 		$('html').keydown(function handleEvent(event) {
-		  game.snake.turn(event.keyCode);
+		  game.snake.checkTurn(event.keyCode);
 		});
 
 		function runLoop() {
+			game.snake.directionChangedThisTurn = false;
 			game.move();
 			SnakeGame.updateBoard(game);
 			if (game.gameOver()) {
@@ -31,22 +32,26 @@ $(function() {
 
 });
 
+SnakeGame.boardRegex = /cellid(.+)-(.+)/;
+
 SnakeGame.updateBoard = (function() {
 	function updateBoard(game) {
 		var appleSpot = game.applePos;
 		var snakeSpots = game.snake.body;
 
-		for (var i = 0; i < game.height; i++) {
-			for (var j = 0; j < game.width; j++) {
-			var cell = $("#cellid"+ i + "-" + j);
+		for (var i = 0; i < this.gameDivs.length; i ++) {
+			var cell = this.gameDivs[i];
+			var idInfo = cell.attr("id");
+			var rowCol = this.boardRegex.exec(idInfo);
+			var targetY = parseInt(rowCol[1]);
+			var targetX = parseInt(rowCol[2]);
 
-				if (SnakeGame.includePos(snakeSpots, j, i)) {
-					cell.css('background-color', 'green');
-				} else if (appleSpot.y == i && appleSpot.x == j) {
-					cell.css('background-color', 'red');
-				} else {
-					cell.css('background-color', 'black');
-				}
+			if (SnakeGame.includePos(snakeSpots, targetX, targetY)) {
+				cell.css('background-color', 'green');
+			} else if (appleSpot.y == targetY && appleSpot.x == targetX) {
+				cell.css('background-color', 'red');
+			} else {
+				cell.css('background-color', 'black');
 			}
 		}
 	}
@@ -90,7 +95,8 @@ SnakeGame.makeBoard = (function() {
 				cellDiv.css({'width': '25px',
 											'height': '25px',
 											'background-color': 'black',
-											'float': 'left'})
+											'float': 'left'});
+				this.gameDivs.push(cellDiv);
 				rowDiv.append(cellDiv);
 			}
 

@@ -57,27 +57,36 @@ var SnakeGame = (function (){
 		this.head = this.body[this.body.length - 1];
 	}
 
-	Snake.prototype.turn = function(key) {
+	Snake.prototype.checkTurn = function(key) {
+		if (!this.directionChangedThisTurn) {
+			this.turn(key)
+		}
+	}
 
+	Snake.prototype.turn = function(key) {
 		switch(key) {
 		case 37:
 			if (this.direction !== "east") {
 				this.direction = "west";
+				this.directionChangedThisTurn = true;
 			}
 			break;
 		case 38:
 			if (this.direction !== "north") {
 				this.direction = "south";
+				this.directionChangedThisTurn = true;
 			}
 			break;
 		case 39:
 			if (this.direction !== "west") {
 				this.direction = "east";
+				this.directionChangedThisTurn = true;
 			}
 			break;
 		case 40:
 			if (this.direction !== "south") {
 				this.direction = "north";
+				this.directionChangedThisTurn = true;
 			}
 			break;
 		default:
