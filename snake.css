@@ -1,0 +1,45 @@
+body {
+	background-color: green;
+}
+
+#container {
+}
+
+#game {
+	display: inline-block;
+	width: 500px;
+	vertical-align: top;
+	margin-top: 50px;
+	margin-left: 10%;
+}
+
+#info-container {
+	vertical-align: top;
+	display: inline-block;
+	margin-left: 2%;
+}
+
+#title {
+	margin-top: 20px;
+	margin-left: 50%;
+
+	font-size: 70px;
+	font-weight: bold;
+	font-family: 'Raleway Dots', cursive;
+}
+
+#options {
+	margin-top: 10px
+}
+
+#level {
+	/*display: inline;*/
+}
+
+#slider {
+	display: inline-block;
+	width: 250px;
+	
+	margin-bottom: 10px;
+}
+

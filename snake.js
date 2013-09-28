@@ -17,7 +17,6 @@ var SnakeGame = (function (){
 	Board.prototype.move = function() {
 		if (this.appleAt(this.snake.head)) {
 			this.setApple();
-
 		} else {
 			this.snake.body.shift();
 		}
@@ -59,18 +58,27 @@ var SnakeGame = (function (){
 	}
 
 	Snake.prototype.turn = function(key) {
+
 		switch(key) {
 		case 37:
-			this.direction = "west";
+			if (this.direction !== "east") {
+				this.direction = "west";
+			}
 			break;
 		case 38:
-			this.direction = "south";
+			if (this.direction !== "north") {
+				this.direction = "south";
+			}
 			break;
 		case 39:
-			this.direction = "east";
+			if (this.direction !== "west") {
+				this.direction = "east";
+			}
 			break;
 		case 40:
-			this.direction = "north";
+			if (this.direction !== "south") {
+				this.direction = "north";
+			}
 			break;
 		default:
 			console.log("Didn't recognize key value");
@@ -93,14 +101,7 @@ var SnakeGame = (function (){
 		}
 
 		return newPos;
-	}
-
-
-
-
-
-
-	
+	}	
 
 	return {
 		Snake: Snake,
@@ -108,6 +109,7 @@ var SnakeGame = (function (){
 	};
 
 })();
+
 
 // var game = new SnakeGame.Board(100, 200);
 
