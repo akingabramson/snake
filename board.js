@@ -1,9 +1,10 @@
-SnakeGame.board = (function (){
+SnakeGame.Board = (function (){
 	function Board(height, width) {
-		this.snake = new Snake(height, width);
+		this.snake = new SnakeGame.Snake(height, width);
 		this.height = height;
 		this.width = width;
 		this.setApple();
+		this.cellGrabRegex = /cellid(.+)-(.+)/;
 	}
 
 	Board.prototype.setApple = function() {
@@ -46,6 +47,56 @@ SnakeGame.board = (function (){
 			}
 		return false
 		}
+	}
+
+	Board.prototype.update = function() {
+		var appleSpot = this.applePos;
+
+		for (var i = 0; i < this.gameDivs.length; i ++) {
+			var cell = this.gameDivs[i];
+			var idInfo = cell.attr("id");
+			var rowCol = this.cellGrabRegex.exec(idInfo);
+			var targetY = parseInt(rowCol[1]);
+			var targetX = parseInt(rowCol[2]);
+
+			if (this.snake.includesSpot(snakeSpots, targetX, targetY)) {
+				cell.css('background-color', 'green');
+			} else if (appleSpot.y == targetY && appleSpot.x == targetX) {
+				cell.css('background-color', 'red');
+			} else {
+				cell.css('background-color', 'black');
+			}
+		}
+	}
+
+	Board.prototype.makeBoard = function() {
+		var boardDiv = $("<div>");
+		boardDiv.attr('id', 'board');
+		boardDiv.css('overflow', 'hidden');
+
+		this.gameDivs = [];
+
+		for (var i = 0; i < game.height; i++) {
+			var rowDiv = $("<div>");
+			rowDiv.addClass('row');
+			rowDiv.attr("id", 'rowid'+ i);
+			rowDiv.css('overflow', 'hidden');
+
+			for (var j = 0; j < game.width; j++) {
+				var cellDiv = $("<div>");
+				cellDiv.addClass('cell');
+				cellDiv.attr('id', "cellid"+ i + "-" + j);
+				cellDiv.css({'width': '25px',
+											'height': '25px',
+											'background-color': 'black',
+											'float': 'left'});
+				this.gameDivs.push(cellDiv);
+				rowDiv.append(cellDiv);
+			}
+
+			boardDiv.append(rowDiv);
+		}
+		$('#game').append(boardDiv);
 	}
 
 	return Board;
