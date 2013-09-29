@@ -1,28 +1,55 @@
 $(function() {
-	window.levelSlider = $("#slider").slider({ min: 1, max: 10, value: 5});
-	SnakeGame.startgame();
+	window.levelSlider = $("#slider");
 
+	window.levelSlider.slider({ 
+		min: 1, 
+		max: 9, 
+		value: 5,
+		slide: function(event, ui) {
+			var $value = makeValueDiv();
+			$value.html(ui.value);
+			$(this).find(".ui-slider-handle").html($value);
+		}
+	});
+
+	$value = makeValueDiv();
+	$value.html("5");
+	window.levelSlider.find(".ui-slider-handle").html($value);
+
+	var currentBoard = new SnakeGame.Board(20, 20);
+	currentBoard.makeBoard();
+	currentBoard.update();
+
+	$("#start-game").on("click", function(){
+		$('#info-container').css('background-color', 'green');
+
+		clearInterval(window.run)
+		currentBoard = new SnakeGame.Board(20, 20);
+		currentBoard.makeBoard();
+		SnakeGame.startgame(currentBoard)
+	});
 });
 
 
 SnakeGame.startgame = (function(){
-	function startgame() {
-
+	function startgame(board) {
 		function runLoop() {
-			board.snake.directionChangedThisTurn = false;
+			board.snake.initialDirection = board.snake.direction;
 			board.move();
 			board.update();
 			if (board.gameOver()) {
 				console.log("GAME OVER");
-				$('body').css('background-color', 'red');
-				clearInterval(run);
+				$('#info-container').css('background-color', 'red');
+				var scoreSpan = $("#high-score");
+				var score = parseInt(scoreSpan.html())
+
+				if (board.appleCount > score) {
+					scoreSpan.html(board.appleCount.toString());
+				};
+				$('html').off("keydown");
+				clearInterval(window.run);
 			}
 		}
-
-		var board = new SnakeGame.Board(20, 20);
-		console.log(board)
-		board.makeBoard();
-		board.update();
 
 		$('html').keydown(function handleEvent(event) {
 		  board.snake.checkTurn(event.keyCode);
@@ -31,11 +58,14 @@ SnakeGame.startgame = (function(){
 		// kick off run loop in 250millis
 		var time = 200;
 		var level = window.levelSlider.slider("value");
-		console.log(level)
-		var run = window.setInterval(runLoop, time);	
+		window.run = window.setInterval(runLoop, 30 + time/level);	
 	}
 
 	return startgame
 })();
 
-
+function makeValueDiv(){
+	var $value = $("<span>");
+	$value.addClass("levelVal")
+	return $value
+}
