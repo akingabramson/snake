@@ -20,13 +20,14 @@ $(function() {
 	currentBoard.makeBoard();
 	currentBoard.update();
 
-	$("#start-game").on("click", function(){
-		$('#info-container').css('background-color', 'green');
-
-		clearInterval(window.run)
-		currentBoard = new SnakeGame.Board(20, 20);
-		currentBoard.makeBoard();
-		SnakeGame.startgame(currentBoard)
+	$("html").keyup(function(e){
+		if (e.keyCode == '13') {
+			$('#info-container').css('background-color', 'green');
+			clearInterval(window.run);
+			currentBoard = new SnakeGame.Board(20, 20);
+			currentBoard.makeBoard();
+			SnakeGame.startgame(currentBoard)	
+		};
 	});
 });
 
